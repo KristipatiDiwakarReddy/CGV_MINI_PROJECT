@@ -1,0 +1,134 @@
+   	gluCylinder(Cylinder,.4,.4,4,16,20);
+  	 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+   	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, red);
+   	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shiny);
+   	glPushMatrix();
+   	glutSolidTorus (1.4, 1.4,  6,  6);
+   	glutSolidCube(2.5);
+   	glPushMatrix();
+   	glTranslatef(0.0,-2.0,0.0);
+   	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, red);
+//material property for the base of the windmill
+   	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, red);
+   	glPushMatrix();
+   	glRotatef(90.0,1.0,0.0,0.0);
+  	 glTranslatef(0.0,0.0,-2.0);
+   	gluCylinder(Cylinder,1.0,1.5,27,50,50);
+   	glPopMatrix();
+   	glPopMatrix();
+   	glRotatef(z_angle, 0.0, 0.0, 1.0);
+   	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+   	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+  	glPushMatrix();
+   	glTranslatef(0.0,0.0,1.5);
+   	glutSolidCone(1.5,2.5,50,50);
+   	glPopMatrix();
+   	glPushMatrix();		//blade 1
+  	 glTranslatef(0.0,0.0,2.2);
+   	glRotatef(90.0,1.0,0.0,0.0);
+  	 glPushMatrix();
+   	glRotatef(120,0.0,1.0,0.0);
+   	glutSolidCone(0.9, 16.0, 15, 15);
+   	glPopMatrix();
+   	glPopMatrix();
+   	glPushMatrix();		//blade 2
+   	glTranslatef(0.0,0.0,2.2);
+   	glRotatef(90.0,1.0,0.0,0.0);
+   	glPushMatrix();
+   	glRotatef(-120,0.0,1.0,0.0);
+   	glutSolidCone(0.9, 16.0, 15, 15);
+   	glPopMatrix();
+  	 glPopMatrix();
+  	 glPushMatrix();		 //blade 3
+   	glTranslatef(0.0,0.0,2.2);
+  	 glRotatef(90.0,1.0,0.0,0.0);
+   	glutSolidCone(0.9, 16.0, 15, 15);
+   	glPopMatrix();
+   	glLightfv(GL_LIGHT1, GL_POSITION, pos);
+   	glutSwapBuffers();
+}
+
+void init (void)
+{
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-25.0, 25.0, -25.0, 25.0, -250.0, 250.0);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHT1);
+        glEnable(GL_NORMALIZE);
+}
+
+
+
+
+void special (int key, int x, int y)
+{
+      switch (key)
+      {
+           case GLUT_KEY_LEFT:
+          {
+            axis = X; camera_angle--;
+            printf("\n\nVIEW ANGLE=%f", camera_angle);
+          };
+            glutPostRedisplay();
+            break;
+         case GLUT_KEY_RIGHT:
+          {
+            axis = Y; camera_angle++;
+            printf("\n\nVIEW ANGLE=%f", camera_angle);
+          };
+            glutPostRedisplay();
+            break;
+          case GLUT_KEY_UP: c=c+0.4;
+            glutPostRedisplay();
+            break;
+          case GLUT_KEY_END:
+            exit(0);
+          case GLUT_KEY_DOWN:
+          {
+            c=c-0.4;
+          };
+          glutPostRedisplay();
+          break;
+        default: break;
+     }
+}
+
+void reshape (int width, int height)
+{
+      GLfloat w, h;
+      glViewport(0, 0, width, height);
+      glMatrixMode(GL_PROJECTION);
+                glLoadIdentity();
+                if (width > height)
+      {
+            w = (25.0 * width) / height;
+            h = 25.0;
+      }
+      else
+      {
+          w = 25.0;
+           h = (25.0 * height) / width;
+      }
+      glOrtho(-w, w, -h, h, -250.0, 250.0);
+      glutPostRedisplay();
+ }
+
+int main (int argc, char *argv[ ])
+{
+glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
+       	glutInitWindowSize(SIZE, SIZE);
+       	glutInitWindowPosition(100, 50);
+       	glutCreateWindow("SIMULATION OF WINDMILL");
+       	glutIdleFunc(spin);
+      	glutDisplayFunc(display);
+       	glutSpecialFunc(special);
+       	glutMouseFunc(mouse_button);
+       	initialize_menu();
+       	glutReshapeFunc(reshape);
+init();
+	glEnable(GL_DEPTH_TEST);
+       	glutMainLoop();
+}
